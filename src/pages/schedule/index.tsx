@@ -171,12 +171,20 @@ const SchedulePage: React.FC = () => {
 
   return (
     <View className={styles.page}>
-      <View className={styles.studioPicker} onClick={handleStudioSelect}>
-        <Text className={styles.pickerLabel}>当前影棚</Text>
-        <View className={styles.pickerValue}>
-          <Text>{currentStudio.name}</Text>
-          <Text className={styles.pickerArrow}>▼</Text>
+      <View className={styles.studioPicker}>
+        <View style={{ flex: 1 }} onClick={handleStudioSelect}>
+          <Text className={styles.pickerLabel}>当前影棚</Text>
+          <View className={styles.pickerValue}>
+            <Text>{currentStudio.name}</Text>
+            <Text className={styles.pickerArrow}>▼</Text>
+          </View>
         </View>
+        <Text
+          className={styles.overviewBtn}
+          onClick={() => Taro.navigateTo({ url: '/pages/schedule-overview/index' })}
+        >
+          总览
+        </Text>
       </View>
 
       <View className={styles.calendar}>

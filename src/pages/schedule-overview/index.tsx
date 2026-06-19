@@ -1,14 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro';
 import dayjs from 'dayjs';
 import classnames from 'classnames';
 import { useStudioStore } from '@/store/studioStore';
 import { useBookingStore } from '@/store/bookingStore';
-import { useRateStore } from '@/store/rateStore';
-import { generateWeekDates } from '@/data/schedules';
-import { getSchedulesByDate } from '@/data/schedules';
-import { Studio, TimeSlot, SlotStatus } from '@/types';
+import { generateWeekDates, getSchedulesByDate } from '@/data/schedules';
+import { calculatePricing, getRateLabel } from '@/utils/pricing';
+import { Studio, TimeSlot, SlotStatus, Booking } from '@/types';
 import styles from './index.module.scss';
 
 const statusFilters: Array<{ key: SlotStatus | 'all'; label: string }> = [
@@ -19,27 +18,50 @@ const statusFilters: Array<{ key: SlotStatus | 'all'; label: string }> = [
   { key: 'waitlist', label: '候补中' }
 ];
 
+const statusTextMap: Record<SlotStatus, string> = {
+  available: '可预约',
+  booked: '已预约',
+  notified: '待补位确认',
+  waitlist: '候补中',
+  maintenance: '维护中',
+  expired: '已过期'
+};
+
+const weekdayLabels = ['日', '一', '二', '三', '四', '五', '六'];
+
 const ScheduleOverviewPage: React.FC = () => {
   const { studios, getStudioById } = useStudioStore();
-  const { bookings, waitlist, processTimeoutBookings, processExpiredWaitlistNotifications, recalcWaitlistPositions } = useBookingStore();
-  const { rates } = useRateStore();
+  const {
+    bookings,
+    waitlist,
+    selectedDate,
+    setSelectedDate,
+    processTimeoutBookings,
+    processExpiredWaitlistNotifications,
+    recalcWaitlistPositions
+  } = useBookingStore();
 
-  const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD'));
   const [selectedStudioId, setSelectedStudioId] = useState<string>('all');
   const [statusFilter, setStatusFilter] = useState<SlotStatus | 'all'>('all');
-  const [detailSlot, setDetailSlot] = useState<{ slot: TimeSlot; studio: Studio } | null>(null);
+  const [detailSlot, setDetailSlot] = useState<{
+    slot: TimeSlot;
+    studio: Studio;
+    bookingInfo?: Booking;
+    currentPricing?: ReturnType<typeof calculatePricing>;
+    waitlistCount: number;
+    waitlistItems: typeof waitlist;
+  } | null>(null);
 
   const weekDates = useMemo(() => generateWeekDates(), []);
 
   useDidShow(() => {
-    console.log('[ScheduleOverview] 页面显示');
+    console.log('[ScheduleOverview] 页面显示', selectedDate);
     processTimeoutBookings();
     processExpiredWaitlistNotifications();
     recalcWaitlistPositions();
   });
 
   usePullDownRefresh(() => {
-    console.log('[ScheduleOverview] 下拉刷新');
     processTimeoutBookings();
     processExpiredWaitlistNotifications();
     recalcWaitlistPositions();
@@ -126,21 +148,20 @@ const ScheduleOverviewPage: React.FC = () => {
     const totalAvailable = studioStats.reduce((s, x) => s + x.available, 0);
     const totalBooked = studioStats.reduce((s, x) => s + x.booked, 0);
     const totalRevenue = studioStats.reduce((s, x) => s + x.revenue, 0);
-    const totalWaitlist = waitlist.filter((w) => w.date === selectedDate && (w.status === 'waiting' || w.status === 'notified')).length;
+    const totalWaitlist = waitlist.filter(
+      (w) => w.date === selectedDate && (w.status === 'waiting' || w.status === 'notified')
+    ).length;
     return { totalAvailable, totalBooked, totalRevenue, totalWaitlist };
   }, [studioStats, waitlist, selectedDate]);
 
   const filteredStudios = useMemo(() => {
-    let result = studioStats;
-    if (selectedStudioId !== 'all') {
-      result = result.filter((s) => s.studio.id === selectedStudioId);
-    }
-    return result;
+    if (selectedStudioId === 'all') return studioStats;
+    return studioStats.filter((s) => s.studio.id === selectedStudioId);
   }, [studioStats, selectedStudioId]);
 
-  const handleDateSelect = (date: string) => {
+  const handleDateSelect = useCallback((date: string) => {
     setSelectedDate(date);
-  };
+  }, [setSelectedDate]);
 
   const handleStudioPick = () => {
     const items = ['全部影棚', ...studios.map((s) => s.name)];
@@ -157,19 +178,11 @@ const ScheduleOverviewPage: React.FC = () => {
     });
   };
 
-  const handleSlotClick = (slot: TimeSlot) => {
+  const handleSlotClick = useCallback((slot: TimeSlot) => {
     const studio = getStudioById(slot.studioId);
-    if (studio) {
-      setDetailSlot({ slot, studio });
-    }
-  };
+    if (!studio) return;
 
-  const handleCloseDetail = () => {
-    setDetailSlot(null);
-  };
-
-  const getSlotBookingInfo = (slot: TimeSlot) => {
-    return bookings.find(
+    const bookingInfo = bookings.find(
       (b) =>
         b.studioId === slot.studioId &&
         b.date === slot.date &&
@@ -177,21 +190,10 @@ const ScheduleOverviewPage: React.FC = () => {
         b.endTime > slot.startTime &&
         (b.status === 'confirmed' || b.status === 'pending')
     );
-  };
 
-  const getSlotWaitlistCount = (slot: TimeSlot) => {
-    return waitlist.filter(
-      (w) =>
-        w.studioId === slot.studioId &&
-        w.date === slot.date &&
-        w.startTime <= slot.startTime &&
-        w.endTime > slot.startTime &&
-        (w.status === 'waiting' || w.status === 'notified')
-    ).length;
-  };
+    const currentPricing = calculatePricing(slot.date, slot.startTime, slot.endTime);
 
-  const getSlotWaitlistItems = (slot: TimeSlot) => {
-    return waitlist
+    const slotWaitlist = waitlist
       .filter(
         (w) =>
           w.studioId === slot.studioId &&
@@ -201,7 +203,18 @@ const ScheduleOverviewPage: React.FC = () => {
           (w.status === 'waiting' || w.status === 'notified')
       )
       .sort((a, b) => a.position - b.position);
-  };
+
+    setDetailSlot({
+      slot,
+      studio,
+      bookingInfo,
+      currentPricing,
+      waitlistCount: slotWaitlist.length,
+      waitlistItems: slotWaitlist
+    });
+  }, [bookings, waitlist, getStudioById]);
+
+  const handleCloseDetail = () => setDetailSlot(null);
 
   const slotFiltered = (slot: TimeSlot) => {
     if (statusFilter === 'all') return true;
@@ -212,8 +225,42 @@ const ScheduleOverviewPage: React.FC = () => {
     ? '全部影棚'
     : getStudioById(selectedStudioId)?.name || '全部影棚';
 
+  const formatShortDate = (dateStr: string) => {
+    const d = dayjs(dateStr);
+    return `${d.format('MM/DD')}`;
+  };
+
   return (
     <View className={styles.page}>
+      <View className={styles.dateBar}>
+        <ScrollView scrollX enhanced showScrollbar={false} className={styles.dateScroll}>
+          <View className={styles.dateList}>
+            {weekDates.map((date) => {
+              const isActive = date === selectedDate;
+              const d = dayjs(date);
+              const isToday = d.isSame(dayjs(), 'day');
+              return (
+                <View
+                  key={date}
+                  className={classnames(styles.dateItem, isActive && styles.dateActive)}
+                  onClick={() => handleDateSelect(date)}
+                >
+                  <Text className={classnames(styles.dateWeekday, isActive && styles.dateActiveText)}>
+                    周{weekdayLabels[d.day()]}
+                  </Text>
+                  <Text className={classnames(styles.dateNum, isActive && styles.dateActiveText)}>
+                    {d.format('DD')}
+                  </Text>
+                  {isToday && (
+                    <Text className={classnames(styles.dateTag, isActive && styles.dateActiveTag)}>今</Text>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        </ScrollView>
+      </View>
+
       <View className={styles.filters}>
         <View className={styles.filterItem} onClick={handleStudioPick}>
           <View>
@@ -250,7 +297,9 @@ const ScheduleOverviewPage: React.FC = () => {
           <Text className={styles.statLabel}>候补中</Text>
         </View>
         <View className={styles.statItem}>
-          <Text className={classnames(styles.statNum, styles.statRevenue)}>¥{totalStats.totalRevenue.toFixed(0)}</Text>
+          <Text className={classnames(styles.statNum, styles.statRevenue)}>
+            ¥{totalStats.totalRevenue.toFixed(0)}
+          </Text>
           <Text className={styles.statLabel}>预计收入</Text>
         </View>
       </View>
@@ -329,7 +378,7 @@ const ScheduleOverviewPage: React.FC = () => {
               <Text className={styles.modalTitle}>时段详情</Text>
               <Text className={styles.modalClose} onClick={handleCloseDetail}>✕</Text>
             </View>
-            <View className={styles.modalBody}>
+            <ScrollView scrollY enhanced showScrollbar={false} className={styles.modalBody}>
               <View className={styles.detailRow}>
                 <Text className={styles.detailLabel}>影棚</Text>
                 <Text className={styles.detailValue}>{detailSlot.studio.name}</Text>
@@ -346,47 +395,68 @@ const ScheduleOverviewPage: React.FC = () => {
               </View>
               <View className={styles.detailRow}>
                 <Text className={styles.detailLabel}>状态</Text>
-                <Text className={styles.detailValue}>
-                  {detailSlot.slot.status === 'available' && '可预约'}
-                  {detailSlot.slot.status === 'booked' && '已预约'}
-                  {detailSlot.slot.status === 'notified' && '待补位确认'}
-                  {detailSlot.slot.status === 'waitlist' && '候补中'}
-                  {detailSlot.slot.status === 'maintenance' && '维护中'}
-                  {detailSlot.slot.status === 'expired' && '已过期'}
-                </Text>
-              </View>
-              <View className={styles.detailRow}>
-                <Text className={styles.detailLabel}>单价</Text>
-                <Text className={styles.detailValue}>¥{detailSlot.slot.price}/小时</Text>
+                <Text className={styles.detailValue}>{statusTextMap[detailSlot.slot.status]}</Text>
               </View>
 
-              {getSlotBookingInfo(detailSlot.slot) && (
+              {detailSlot.currentPricing && (
+                <>
+                  <Text className={styles.sectionSubtitle}>
+                    {detailSlot.slot.status === 'available' ? '当前费率预估' : '当前费率参考'}
+                  </Text>
+                  <View className={styles.pricingCard}>
+                    {detailSlot.currentPricing.segments.map((seg, idx) => (
+                      <View key={idx} className={styles.pricingRow}>
+                        <Text className={styles.pricingTime}>
+                          {seg.startTime}-{seg.endTime}
+                        </Text>
+                        <Text className={classnames(styles.pricingTag, styles[seg.rateType])}>
+                          {getRateLabel(seg.rateType)}
+                        </Text>
+                        <Text className={styles.pricingCalc}>
+                          {seg.hours}h × ¥{seg.pricePerHour}
+                        </Text>
+                        <Text className={styles.pricingAmount}>¥{seg.subtotal.toFixed(2)}</Text>
+                      </View>
+                    ))}
+                    <View className={styles.pricingTotal}>
+                      <Text className={styles.pricingTotalLabel}>
+                        当前费率预估
+                      </Text>
+                      <Text className={styles.pricingTotalValue}>
+                        ¥{detailSlot.currentPricing.totalAmount.toFixed(2)}
+                      </Text>
+                    </View>
+                  </View>
+                </>
+              )}
+
+              {detailSlot.bookingInfo && (
                 <>
                   <Text className={styles.sectionSubtitle}>预约信息</Text>
                   <View className={styles.bookingCard}>
                     <View className={styles.bookingHeader}>
-                      <Text className={styles.bookingUser}>
-                        {getSlotBookingInfo(detailSlot.slot)?.userName}
-                      </Text>
+                      <Text className={styles.bookingUser}>{detailSlot.bookingInfo.userName}</Text>
                       <Text className={styles.bookingStatus}>
-                        {getSlotBookingInfo(detailSlot.slot)?.status === 'confirmed' ? '已确认' : '待确认'}
+                        {detailSlot.bookingInfo.status === 'confirmed' ? '已确认' : '待确认'}
                       </Text>
                     </View>
                     <View className={styles.bookingInfo}>
-                      订单号：{getSlotBookingInfo(detailSlot.slot)?.id}{'\n'}
-                      时长：{getSlotBookingInfo(detailSlot.slot)?.totalHours}小时{'\n'}
-                      金额：¥{getSlotBookingInfo(detailSlot.slot)?.totalAmount.toFixed(2)}{'\n'}
-                      下单时间：{getSlotBookingInfo(detailSlot.slot)?.createdAt}
+                      <Text>
+                        订单号：{detailSlot.bookingInfo.id}{'\n'}
+                        时长：{detailSlot.bookingInfo.totalHours}小时{'\n'}
+                        下单金额：¥{detailSlot.bookingInfo.totalAmount.toFixed(2)}{'\n'}
+                        下单时间：{detailSlot.bookingInfo.createdAt}
+                      </Text>
                     </View>
                   </View>
                 </>
               )}
 
               <Text className={styles.sectionSubtitle}>
-                候补队列 ({getSlotWaitlistCount(detailSlot.slot)}人)
+                候补队列 ({detailSlot.waitlistCount}人)
               </Text>
-              {getSlotWaitlistItems(detailSlot.slot).length > 0 ? (
-                getSlotWaitlistItems(detailSlot.slot).map((item) => (
+              {detailSlot.waitlistItems.length > 0 ? (
+                detailSlot.waitlistItems.map((item) => (
                   <View key={item.id} className={styles.waitlistItem}>
                     <View className={styles.waitlistLeft}>
                       <View className={styles.waitlistPos}>{item.position}</View>
@@ -402,7 +472,7 @@ const ScheduleOverviewPage: React.FC = () => {
               ) : (
                 <Text className={styles.emptyText}>暂无候补中用户</Text>
               )}
-            </View>
+            </ScrollView>
           </View>
         </View>
       )}

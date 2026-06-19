@@ -33,6 +33,20 @@
   color: $color-text-tertiary;
 }
 
+.overviewBtn {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+  padding: $spacing-xs $spacing-md;
+  border: 2rpx solid $color-primary;
+  border-radius: $radius-button;
+  margin-left: $spacing-md;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
 .calendar {
   background-color: $color-bg-card;
   padding: $spacing-md 0;

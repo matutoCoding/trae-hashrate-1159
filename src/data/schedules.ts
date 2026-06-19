@@ -7,17 +7,8 @@ function generateSlotsForStudio(studioId: string, dateStr: string): TimeSlot[] {
   const slots: TimeSlot[] = [];
   const timeSlots = generateTimeSlots(dateStr);
 
-  const busyRanges = [
-    { start: 10, end: 12 },
-    { start: 14, end: 16 }
-  ];
-
   timeSlots.forEach(({ time, rate }, index) => {
     const hour = parseInt(time.split(':')[0]);
-    const isBusy = busyRanges.some((r) => hour >= r.start && hour < r.end);
-
-    let status: SlotStatus = 'available';
-    if (isBusy) status = 'booked';
 
     slots.push({
       id: `${studioId}-${dateStr}-${index}`,
@@ -25,7 +16,7 @@ function generateSlotsForStudio(studioId: string, dateStr: string): TimeSlot[] {
       date: dateStr,
       startTime: time,
       endTime: `${String(hour + 1).padStart(2, '0')}:00`,
-      status,
+      status: 'available' as SlotStatus,
       rateType: rate?.type || ('normal' as RateType),
       price: rate?.pricePerHour || 100
     });

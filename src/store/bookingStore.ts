@@ -256,6 +256,7 @@ export const useBookingStore = create<BookingStore>()(
         });
 
         get().recalcWaitlistPositions();
+        get().refreshSchedules();
         console.log('[BookingStore] 候补补位确认成功，生成预约', { waitlist: item, booking });
         return { booking, waitlist: { ...item, status: 'confirmed' } };
       },

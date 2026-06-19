@@ -6,6 +6,76 @@
   padding-bottom: 120rpx;
 }
 
+.dateBar {
+  background-color: $color-bg-card;
+  padding: $spacing-md 0;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.dateScroll {
+  width: 100%;
+  @include scroll-x-container;
+}
+
+.dateList {
+  display: inline-flex;
+  gap: $spacing-xs;
+  padding: 0 $page-padding;
+}
+
+.dateItem {
+  @include scroll-x-item(100rpx);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100rpx;
+  height: 130rpx;
+  border-radius: $radius-md;
+  background-color: $color-bg-hover;
+  transition: all $transition-base;
+  flex-shrink: 0;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.dateActive {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  box-shadow: $shadow-card;
+}
+
+.dateWeekday {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  margin-bottom: 4rpx;
+}
+
+.dateNum {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.dateActiveText {
+  color: $color-text-white;
+}
+
+.dateTag {
+  font-size: 18rpx;
+  color: $color-primary;
+  margin-top: 4rpx;
+  font-weight: $font-weight-medium;
+}
+
+.dateActiveTag {
+  color: $color-text-white;
+  background-color: rgba(255, 255, 255, 0.25);
+  padding: 0 12rpx;
+  border-radius: $radius-xs;
+}
+
 .filters {
   background-color: $color-bg-card;
   padding: $spacing-md $page-padding;
@@ -455,4 +525,80 @@
 .emptyText {
   font-size: $font-size-sm;
   color: $color-text-tertiary;
+}
+
+.pricingCard {
+  background-color: $color-bg-hover;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+}
+
+.pricingRow {
+  display: flex;
+  align-items: center;
+  padding: $spacing-xs 0;
+  gap: $spacing-xs;
+}
+
+.pricingTime {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  width: 160rpx;
+}
+
+.pricingTag {
+  padding: 2rpx 10rpx;
+  border-radius: $radius-xs;
+  font-size: 18rpx;
+  font-weight: $font-weight-medium;
+}
+
+.pricingTag.peak {
+  background-color: $color-peak-bg;
+  color: $color-peak-text;
+}
+
+.pricingTag.normal {
+  background-color: $color-offpeak-bg;
+  color: $color-offpeak-text;
+}
+
+.pricingTag.offpeak {
+  background-color: rgba(0, 180, 42, 0.1);
+  color: $color-success;
+}
+
+.pricingCalc {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  flex: 1;
+}
+
+.pricingAmount {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-price;
+  width: 120rpx;
+  text-align: right;
+}
+
+.pricingTotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-sm;
+  margin-top: $spacing-xs;
+  border-top: 1rpx dashed $color-divider;
+}
+
+.pricingTotalLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.pricingTotalValue {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-price;
 }
