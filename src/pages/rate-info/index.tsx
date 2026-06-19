@@ -1,19 +1,28 @@
 import React from 'react';
-import { View, Text } from '@tarojs/components';
+import { View, Text, Button } from '@tarojs/components';
+import Taro from '@tarojs/taro';
 import classnames from 'classnames';
-import { rates } from '@/data/rates';
+import { useRateStore } from '@/store/rateStore';
 import styles from './index.module.scss';
 
-const weekdayLabels = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
-
 const RateInfoPage: React.FC = () => {
+  const rates = useRateStore((s) => s.rates);
   const weekdayRates = rates.filter((r) => r.weekdays.includes(1));
   const weekendRates = rates.filter((r) => r.weekdays.includes(6));
+
+  const handleGotoManage = () => {
+    Taro.navigateTo({ url: '/pages/rate-manage/index' });
+  };
 
   return (
     <View className={styles.page}>
       <View className={styles.header}>
-        <Text className={styles.title}>时段费率说明</Text>
+        <View className={styles.headerRow}>
+          <Text className={styles.title}>时段费率说明</Text>
+          <Button className={styles.manageBtn} onClick={handleGotoManage}>
+            管理费率
+          </Button>
+        </View>
         <Text className={styles.desc}>
           按时段费率分高峰平峰多档计费，跨费率切换点将自动分段计算费用
         </Text>

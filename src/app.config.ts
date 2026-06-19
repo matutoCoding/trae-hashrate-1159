@@ -7,7 +7,8 @@ export default defineAppConfig({
     'pages/studio-detail/index',
     'pages/booking-confirm/index',
     'pages/bill-detail/index',
-    'pages/rate-info/index'
+    'pages/rate-info/index',
+    'pages/rate-manage/index'
   ],
   window: {
     backgroundTextStyle: 'light',

@@ -11,7 +11,7 @@ const BookingConfirmPage: React.FC = () => {
   const router = useRouter();
   const { studioId, date, startTime, endTime } = router.params;
   const { getStudioById } = useStudioStore();
-  const { addWaitlist } = useBookingStore();
+  const { addWaitlist, addBooking } = useBookingStore();
   const [joinWaitlist, setJoinWaitlist] = useState(false);
 
   const studio = studioId ? getStudioById(studioId) : null;
@@ -40,6 +40,20 @@ const BookingConfirmPage: React.FC = () => {
     setTimeout(() => {
       Taro.hideLoading();
 
+      const newBooking = addBooking({
+        studioId: studio.id,
+        studioName: studio.name,
+        userId: 'user-001',
+        userName: '张先生',
+        date: date!,
+        startTime: startTime!,
+        endTime: endTime!,
+        totalHours: pricing.totalHours,
+        segments: pricing.segments,
+        totalAmount: pricing.totalAmount,
+        status: 'confirmed'
+      });
+
       if (joinWaitlist) {
         addWaitlist({
           studioId: studio.id,
@@ -51,6 +65,8 @@ const BookingConfirmPage: React.FC = () => {
           endTime: endTime!
         });
       }
+
+      console.log('[BookingConfirmPage] 预约已持久化', newBooking);
 
       Taro.showModal({
         title: '预约成功',

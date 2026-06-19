@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import { View, Text, Button } from '@tarojs/components';
-import Taro, { useRouter } from '@tarojs/taro';
+import Taro, { useRouter, useDidShow } from '@tarojs/taro';
 import classnames from 'classnames';
-import { getBookingById } from '@/data/bookings';
+import { useBookingStore } from '@/store/bookingStore';
 import { getRateLabel } from '@/utils/pricing';
 import { BookingStatus } from '@/types';
 import styles from './index.module.scss';
@@ -19,11 +19,17 @@ const statusConfig: Record<BookingStatus, { icon: string; text: string; desc: st
 const BillDetailPage: React.FC = () => {
   const router = useRouter();
   const bookingId = router.params.bookingId;
+  const { getBookingById, processTimeoutBookings, processExpiredWaitlistNotifications } = useBookingStore();
+
+  useDidShow(() => {
+    processTimeoutBookings();
+    processExpiredWaitlistNotifications();
+  });
 
   const booking = useMemo(() => {
     if (!bookingId) return null;
     return getBookingById(bookingId);
-  }, [bookingId]);
+  }, [bookingId, getBookingById]);
 
   if (!booking) {
     return (

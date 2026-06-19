@@ -18,17 +18,20 @@ const tabs: Array<{ key: TabType; label: string }> = [
 ];
 
 const OrdersPage: React.FC = () => {
-  const { bookings, refreshBookings } = useBookingStore();
+  const { bookings, processTimeoutBookings, processExpiredWaitlistNotifications, refreshSchedules } = useBookingStore();
   const [activeTab, setActiveTab] = useState<TabType>('all');
 
   useDidShow(() => {
     console.log('[OrdersPage] 页面显示');
-    refreshBookings();
+    processTimeoutBookings();
+    processExpiredWaitlistNotifications();
   });
 
   usePullDownRefresh(() => {
     console.log('[OrdersPage] 下拉刷新');
-    refreshBookings();
+    processTimeoutBookings();
+    processExpiredWaitlistNotifications();
+    refreshSchedules();
     setTimeout(() => Taro.stopPullDownRefresh(), 600);
   });
 

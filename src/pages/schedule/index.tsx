@@ -25,13 +25,17 @@ const SchedulePage: React.FC = () => {
     setSelectedStudioId,
     setSelectedTimeRange,
     refreshSchedules,
-    addWaitlist
+    addWaitlist,
+    processTimeoutBookings,
+    processExpiredWaitlistNotifications
   } = useBookingStore();
 
   const [showStudioPicker, setShowStudioPicker] = useState(false);
 
   useDidShow(() => {
     console.log('[SchedulePage] 页面显示');
+    processTimeoutBookings();
+    processExpiredWaitlistNotifications();
     if (selectedStudioId) {
       refreshSchedules();
     }
@@ -39,6 +43,8 @@ const SchedulePage: React.FC = () => {
 
   usePullDownRefresh(() => {
     console.log('[SchedulePage] 下拉刷新');
+    processTimeoutBookings();
+    processExpiredWaitlistNotifications();
     refreshSchedules();
     setTimeout(() => Taro.stopPullDownRefresh(), 600);
   });

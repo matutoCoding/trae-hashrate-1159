@@ -16,17 +16,21 @@ const tabs: Array<{ key: TabType; label: string }> = [
 ];
 
 const WaitlistPage: React.FC = () => {
-  const { waitlist, refreshWaitlist } = useBookingStore();
+  const { waitlist, processTimeoutBookings, processExpiredWaitlistNotifications, recalcWaitlistPositions } = useBookingStore();
   const [activeTab, setActiveTab] = useState<TabType>('all');
 
   useDidShow(() => {
     console.log('[WaitlistPage] 页面显示');
-    refreshWaitlist();
+    processTimeoutBookings();
+    processExpiredWaitlistNotifications();
+    recalcWaitlistPositions();
   });
 
   usePullDownRefresh(() => {
     console.log('[WaitlistPage] 下拉刷新');
-    refreshWaitlist();
+    processTimeoutBookings();
+    processExpiredWaitlistNotifications();
+    recalcWaitlistPositions();
     setTimeout(() => Taro.stopPullDownRefresh(), 600);
   });
 

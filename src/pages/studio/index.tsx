@@ -3,6 +3,7 @@ import { View, Text, Input, ScrollView } from '@tarojs/components';
 import Taro, { useDidShow, usePullDownRefresh } from '@tarojs/taro';
 import classnames from 'classnames';
 import { useStudioStore } from '@/store/studioStore';
+import { useBookingStore } from '@/store/bookingStore';
 import StudioCard from '@/components/StudioCard';
 import styles from './index.module.scss';
 
@@ -18,13 +19,18 @@ const filters: Array<{ key: FilterType; label: string }> = [
 const StudioPage: React.FC = () => {
   const [searchText, setSearchText] = useState('');
   const { filterStatus, setFilterStatus, getFilteredStudios, studios } = useStudioStore();
+  const { processTimeoutBookings, processExpiredWaitlistNotifications } = useBookingStore();
 
   useDidShow(() => {
     console.log('[StudioPage] 页面显示');
+    processTimeoutBookings();
+    processExpiredWaitlistNotifications();
   });
 
   usePullDownRefresh(() => {
     console.log('[StudioPage] 下拉刷新');
+    processTimeoutBookings();
+    processExpiredWaitlistNotifications();
     setTimeout(() => {
       Taro.stopPullDownRefresh();
       Taro.showToast({

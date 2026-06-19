@@ -21,12 +21,31 @@ const statusMap: Record<WaitlistStatus, { label: string; className: string }> = 
 const WaitlistItem: React.FC<WaitlistItemProps> = ({ item }) => {
   const status = statusMap[item.status];
   const cancelWaitlist = useBookingStore((state) => state.cancelWaitlist);
+  const confirmWaitlist = useBookingStore((state) => state.confirmWaitlist);
 
   const handleConfirm = () => {
-    console.log('[WaitlistItem] 确认补位', item.id);
-    Taro.showToast({
-      title: '补位成功',
-      icon: 'success'
+    Taro.showModal({
+      title: '确认补位',
+      content: `确定接受 ${item.studioName} ${item.date} ${item.startTime}-${item.endTime} 的补位吗？确认后将自动生成预约订单。`,
+      success: (res) => {
+        if (res.confirm) {
+          const result = confirmWaitlist(item.id);
+          if (result) {
+            console.log('[WaitlistItem] 补位成功，生成预约', result.booking);
+            Taro.showModal({
+              title: '补位成功',
+              content: `已成功补位！\n订单号：${result.booking.id}\n金额：¥${result.booking.totalAmount.toFixed(2)}`,
+              showCancel: false,
+              confirmText: '查看订单',
+              success: () => {
+                Taro.switchTab({ url: '/pages/orders/index' });
+              }
+            });
+          } else {
+            Taro.showToast({ title: '操作失败', icon: 'none' });
+          }
+        }
+      }
     });
   };
 

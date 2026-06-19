@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { TimeRate, BookingSegment, RateType } from '@/types';
-import { rates } from '@/data/rates';
+import { getRates } from '@/store/rateStore';
 
 export interface PricingResult {
   segments: BookingSegment[];
@@ -20,6 +20,7 @@ export function getRateLabel(type: RateType): string {
 export function getApplicableRate(date: string, time: string): TimeRate | null {
   const weekday = dayjs(date).day();
   const currentMinutes = timeToMinutes(time);
+  const rates = getRates();
 
   for (const rate of rates) {
     if (!rate.weekdays.includes(weekday)) continue;
@@ -67,7 +68,29 @@ export function calculatePricing(
     const rate = getApplicableRate(date, currentTime);
 
     if (!rate) {
-      console.warn('[Pricing] 未找到匹配费率', { date, currentTime });
+      console.warn('[Pricing] 未找到匹配费率，使用默认价格', { date, currentTime });
+      const defaultRate: TimeRate = {
+        id: 'default',
+        type: 'normal',
+        label: '默认时段',
+        startTime: currentTime,
+        endTime: endTime,
+        pricePerHour: 100,
+        weekdays: [0, 1, 2, 3, 4, 5, 6]
+      };
+      const segmentDuration = (endMinutes - currentMinutes) / 60;
+      const segment: BookingSegment = {
+        startTime: currentTime,
+        endTime: minutesToTime(endMinutes),
+        rateType: defaultRate.type,
+        rateLabel: defaultRate.label,
+        hours: parseFloat(segmentDuration.toFixed(2)),
+        pricePerHour: defaultRate.pricePerHour,
+        subtotal: parseFloat((segmentDuration * defaultRate.pricePerHour).toFixed(2))
+      };
+      segments.push(segment);
+      totalHours += segment.hours;
+      totalAmount += segment.subtotal;
       break;
     }
 
