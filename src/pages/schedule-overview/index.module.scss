@@ -1,0 +1,458 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.filters {
+  background-color: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  border-bottom: 1rpx solid $color-divider;
+  display: flex;
+  gap: $spacing-sm;
+  flex-wrap: wrap;
+}
+
+.filterItem {
+  flex: 1;
+  min-width: 180rpx;
+  background-color: $color-bg-hover;
+  border-radius: $radius-md;
+  padding: $spacing-sm $spacing-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.filterLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.filterValue {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.filterArrow {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-left: $spacing-xs;
+}
+
+.statusFilter {
+  background-color: $color-bg-card;
+  padding: $spacing-sm $page-padding;
+  display: flex;
+  gap: $spacing-sm;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.statusChip {
+  padding: $spacing-xs $spacing-md;
+  border-radius: 40rpx;
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  background-color: $color-bg-hover;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.statusChipActive {
+  background-color: $color-primary;
+  color: $color-text-white;
+}
+
+.statsBar {
+  background-color: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  display: flex;
+  justify-content: space-around;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.statNum {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.statLabel {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: 4rpx;
+}
+
+.statRevenue {
+  color: $color-price;
+}
+
+.timeline {
+  padding: $spacing-md $page-padding;
+}
+
+.studioSection {
+  background-color: $color-bg-card;
+  border-radius: $radius-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+}
+
+.studioHeader {
+  padding: $spacing-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.studioName {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.studioStatus {
+  font-size: $font-size-xs;
+  padding: 4rpx 16rpx;
+  border-radius: $radius-xs;
+  background-color: $color-success-bg;
+  color: $color-success;
+}
+
+.studioBusy {
+  background-color: $color-warning-bg;
+  color: $color-warning;
+}
+
+.studioMaintenance {
+  background-color: $color-error-bg;
+  color: $color-error;
+}
+
+.slotsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8rpx;
+  padding: $spacing-md;
+}
+
+.slotCell {
+  padding: $spacing-sm 8rpx;
+  border-radius: $radius-sm;
+  text-align: center;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+}
+
+.slotAvailable {
+  background-color: $color-success-bg;
+  border: 1rpx solid rgba($color-success, 0.3);
+}
+
+.slotBooked {
+  background-color: $color-primary-bg;
+  border: 1rpx solid rgba($color-primary, 0.4);
+}
+
+.slotNotified {
+  background: linear-gradient(135deg, rgba(255, 193, 7, 0.2), rgba(255, 152, 0, 0.25));
+  border: 1rpx solid rgba(255, 152, 0, 0.5);
+}
+
+.slotWaitlist {
+  background-color: $color-peak-bg;
+  border: 1rpx solid rgba($color-secondary, 0.3);
+}
+
+.slotMaintenance {
+  background-color: $color-error-bg;
+  border: 1rpx solid rgba($color-error, 0.3);
+}
+
+.slotExpired {
+  background-color: $color-bg-hover;
+  border: 1rpx solid $color-divider;
+  opacity: 0.6;
+}
+
+.slotTime {
+  font-size: 22rpx;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+  line-height: 1.2;
+}
+
+.slotPrice {
+  font-size: 20rpx;
+  color: $color-text-secondary;
+  margin-top: 4rpx;
+}
+
+.slotBooked .slotTime,
+.slotBooked .slotPrice {
+  color: $color-primary;
+}
+
+.slotAvailable .slotTime,
+.slotAvailable .slotPrice {
+  color: $color-success;
+}
+
+.legend {
+  background-color: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  margin-top: $spacing-md;
+  border-radius: $radius-lg;
+}
+
+.legendTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.legendList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-md;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.legendDot {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 6rpx;
+}
+
+.legendText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.modalMask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modalContent {
+  width: 100%;
+  background-color: $color-bg-card;
+  border-radius: $radius-xl $radius-xl 0 0;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modalHeader {
+  padding: $spacing-lg $page-padding $spacing-md;
+  border-bottom: 1rpx solid $color-divider;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modalTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+}
+
+.modalClose {
+  font-size: $font-size-xl;
+  color: $color-text-tertiary;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalBody {
+  padding: $spacing-md $page-padding;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  padding: $spacing-sm 0;
+  border-bottom: 1rpx solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.detailLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.detailValue {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.sectionSubtitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin: $spacing-md 0 $spacing-sm;
+}
+
+.bookingCard {
+  background-color: $color-bg-hover;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+}
+
+.bookingHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xs;
+}
+
+.bookingUser {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.bookingStatus {
+  font-size: $font-size-xs;
+  padding: 4rpx 16rpx;
+  border-radius: $radius-xs;
+  background-color: $color-primary-bg;
+  color: $color-primary;
+}
+
+.bookingInfo {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: 1.6;
+}
+
+.waitlistItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-sm 0;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.waitlistLeft {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.waitlistPos {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background-color: $color-peak-bg;
+  color: $color-secondary;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.waitlistInfo {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+}
+
+.waitlistStatus {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.modalFooter {
+  padding: $spacing-md $page-padding;
+  border-top: 1rpx solid $color-divider;
+  display: flex;
+  gap: $spacing-md;
+}
+
+.btn {
+  @include button-reset;
+  flex: 1;
+  height: $button-height;
+  border-radius: $radius-button;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+.btnPrimary {
+  background-color: $color-primary;
+  color: $color-text-white;
+}
+
+.btnOutline {
+  background-color: transparent;
+  color: $color-text-secondary;
+  border: 2rpx solid $color-divider;
+}
+
+.emptyState {
+  padding: 80rpx $page-padding;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 80rpx;
+  margin-bottom: $spacing-md;
+}
+
+.emptyText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}

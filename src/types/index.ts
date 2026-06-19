@@ -73,6 +73,7 @@ export interface Booking {
   createdAt: string;
   checkInTime?: string;
   releaseTime?: string;
+  rateSnapshot?: string;
 }
 
 export type WaitlistStatus = 'waiting' | 'notified' | 'confirmed' | 'expired' | 'cancelled';

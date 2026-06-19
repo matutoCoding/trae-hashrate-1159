@@ -3,7 +3,7 @@ import { View, Text, Button } from '@tarojs/components';
 import Taro, { useRouter, useDidShow } from '@tarojs/taro';
 import classnames from 'classnames';
 import { useBookingStore } from '@/store/bookingStore';
-import { getRateLabel } from '@/utils/pricing';
+import { calculatePricing, getRateLabel } from '@/utils/pricing';
 import { BookingStatus } from '@/types';
 import styles from './index.module.scss';
 
@@ -30,6 +30,23 @@ const BillDetailPage: React.FC = () => {
     if (!bookingId) return null;
     return getBookingById(bookingId);
   }, [bookingId, getBookingById]);
+
+  const currentPricing = useMemo(() => {
+    if (!booking) return null;
+    return calculatePricing(booking.date, booking.startTime, booking.endTime);
+  }, [booking]);
+
+  const priceDiff = useMemo(() => {
+    if (!booking || !currentPricing) return null;
+    const diff = currentPricing.totalAmount - booking.totalAmount;
+    if (Math.abs(diff) < 0.01) return null;
+    return {
+      currentAmount: currentPricing.totalAmount,
+      originalAmount: booking.totalAmount,
+      diff,
+      isHigher: diff > 0
+    };
+  }, [booking, currentPricing]);
 
   if (!booking) {
     return (
@@ -101,7 +118,19 @@ const BillDetailPage: React.FC = () => {
       </View>
 
       <View className={styles.section}>
-        <Text className={styles.sectionTitle}>分段计费明细</Text>
+        <View className={styles.sectionHeader}>
+          <Text className={styles.sectionTitle}>分段计费明细</Text>
+          <Text className={styles.priceNote}>按下单时费率计算</Text>
+        </View>
+        {priceDiff && (
+          <View className={styles.priceDiffTip}>
+            <Text className={styles.priceDiffIcon}>💡</Text>
+            <Text className={styles.priceDiffText}>
+              当前费率预估 ¥{priceDiff.currentAmount.toFixed(2)}，
+              {priceDiff.isHigher ? '比下单时贵' : '比下单时便宜'} ¥{Math.abs(priceDiff.diff).toFixed(2)}
+            </Text>
+          </View>
+        )}
         <View className={styles.segmentHeader}>
           <Text className={classnames(styles.segmentCol, styles.segmentTime)}>时段</Text>
           <Text className={classnames(styles.segmentCol, styles.segmentRate)}>费率</Text>

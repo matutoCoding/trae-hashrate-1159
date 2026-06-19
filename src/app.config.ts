@@ -2,6 +2,7 @@ export default defineAppConfig({
   pages: [
     'pages/studio/index',
     'pages/schedule/index',
+    'pages/schedule-overview/index',
     'pages/waitlist/index',
     'pages/orders/index',
     'pages/studio-detail/index',

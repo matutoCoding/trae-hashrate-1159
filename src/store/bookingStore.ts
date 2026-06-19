@@ -7,6 +7,7 @@ import { calculatePricing } from '@/utils/pricing';
 import { getSchedulesByDate } from '@/data/schedules';
 import { getBookingsByStatus as getMockBookings } from '@/data/bookings';
 import { getWaitlistByStatus as getMockWaitlist } from '@/data/waitlist';
+import { getRates } from './rateStore';
 
 interface BookingStore {
   bookings: Booking[];
@@ -153,11 +154,18 @@ export const useBookingStore = create<BookingStore>()(
 
       addBooking: (booking) => {
         const now = dayjs().format('YYYY-MM-DD HH:mm:ss');
+        let rateSnapshot = '';
+        try {
+          rateSnapshot = JSON.stringify(getRates());
+        } catch (e) {
+          console.error('[BookingStore] 生成费率快照失败', e);
+        }
         const newBooking: Booking = {
           ...booking,
           id: `booking-${Date.now()}`,
           status: booking.status || 'confirmed',
-          createdAt: now
+          createdAt: now,
+          rateSnapshot
         };
         set({ bookings: [newBooking, ...get().bookings] });
         console.log('[BookingStore] 新增预约成功', newBooking);
@@ -253,14 +261,24 @@ export const useBookingStore = create<BookingStore>()(
       },
 
       cancelWaitlist: (id) => {
+        const item = get().waitlist.find((w) => w.id === id);
+        if (!item) return;
+
+        const wasNotified = item.status === 'notified';
+
         set({
           waitlist: get().waitlist.map((w) =>
             w.id === id ? { ...w, status: 'cancelled' as const, position: 0 } : w
           )
         });
         get().recalcWaitlistPositions();
-        get().refreshSchedules();
-        console.log('[BookingStore] 取消候补', id);
+
+        if (wasNotified) {
+          get().notifyNextWaitlist(item.studioId, item.date, item.startTime, item.endTime);
+        } else {
+          get().refreshSchedules();
+        }
+        console.log('[BookingStore] 取消候补', { id, wasNotified });
       },
 
       processTimeoutBookings: () => {
