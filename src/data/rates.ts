@@ -32,9 +32,18 @@ export const rates: TimeRate[] = [
     id: 'rate-peak-weekend',
     type: 'peak',
     label: '周末高峰',
-    startTime: '10:00',
+    startTime: '14:00',
     endTime: '22:00',
     pricePerHour: 220,
+    weekdays: [6, 0]
+  },
+  {
+    id: 'rate-normal-weekend',
+    type: 'normal',
+    label: '周末平峰',
+    startTime: '10:00',
+    endTime: '14:00',
+    pricePerHour: 160,
     weekdays: [6, 0]
   },
   {

@@ -85,9 +85,10 @@ const SchedulePage: React.FC = () => {
   };
 
   const handleSlotClick = (slot: TimeSlotType) => {
-    if (slot.status === 'booked') {
+    if (slot.status === 'booked' || slot.status === 'notified') {
+      const statusText = slot.status === 'booked' ? '该时段已被预约' : '该时段待补位确认';
       Taro.showModal({
-        title: '该时段已被预约',
+        title: statusText,
         content: '是否加入候补队列？有空闲时段将第一时间通知您。',
         confirmText: '加入候补',
         success: (res) => {

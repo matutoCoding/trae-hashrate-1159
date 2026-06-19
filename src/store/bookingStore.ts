@@ -93,9 +93,10 @@ export const useBookingStore = create<BookingStore>()(
       refreshSchedules: () => {
         const { selectedDate, selectedStudioId } = get();
         const schedules = getSchedulesByDate(selectedDate, selectedStudioId || undefined);
-        const { bookings } = get();
+        const { bookings, waitlist } = get();
+
         const processedSchedules = schedules.map((slot) => {
-          const hasBooking = bookings.some(
+          const activeBooking = bookings.find(
             (b) =>
               b.studioId === slot.studioId &&
               b.date === slot.date &&
@@ -103,8 +104,50 @@ export const useBookingStore = create<BookingStore>()(
               b.endTime > slot.startTime &&
               (b.status === 'confirmed' || b.status === 'pending')
           );
-          return hasBooking ? { ...slot, status: 'booked' as const } : slot;
+
+          if (activeBooking) {
+            return { ...slot, status: 'booked' as const, bookingId: activeBooking.id };
+          }
+
+          const notifiedWaitlist = waitlist.find(
+            (w) =>
+              w.studioId === slot.studioId &&
+              w.date === slot.date &&
+              w.startTime <= slot.startTime &&
+              w.endTime > slot.startTime &&
+              w.status === 'notified'
+          );
+
+          if (notifiedWaitlist) {
+            return { ...slot, status: 'notified' as const };
+          }
+
+          const hasWaiting = waitlist.some(
+            (w) =>
+              w.studioId === slot.studioId &&
+              w.date === slot.date &&
+              w.startTime <= slot.startTime &&
+              w.endTime > slot.startTime &&
+              w.status === 'waiting'
+          );
+
+          if (hasWaiting) {
+            return { ...slot, status: 'waitlist' as const };
+          }
+
+          return slot;
         });
+
+        console.log('[BookingStore] 刷新排期状态', {
+          date: selectedDate,
+          studioId: selectedStudioId,
+          total: processedSchedules.length,
+          booked: processedSchedules.filter((s) => s.status === 'booked').length,
+          notified: processedSchedules.filter((s) => s.status === 'notified').length,
+          waitlist: processedSchedules.filter((s) => s.status === 'waitlist').length,
+          available: processedSchedules.filter((s) => s.status === 'available').length
+        });
+
         set({ schedules: processedSchedules });
       },
 
@@ -170,6 +213,7 @@ export const useBookingStore = create<BookingStore>()(
         };
         set({ waitlist: [...get().waitlist, newItem] });
         console.log('[BookingStore] 加入候补成功', { ...newItem, position });
+        get().refreshSchedules();
         return newItem;
       },
 
@@ -215,6 +259,7 @@ export const useBookingStore = create<BookingStore>()(
           )
         });
         get().recalcWaitlistPositions();
+        get().refreshSchedules();
         console.log('[BookingStore] 取消候补', id);
       },
 
@@ -270,6 +315,7 @@ export const useBookingStore = create<BookingStore>()(
 
         if (!candidate) {
           console.log('[BookingStore] 无有效候补中用户', { studioId, date, startTime, endTime });
+          get().refreshSchedules();
           return null;
         }
 
@@ -286,6 +332,7 @@ export const useBookingStore = create<BookingStore>()(
             : w
         );
         set({ waitlist: updated });
+        get().refreshSchedules();
         console.log('[BookingStore] 通知候补补位', {
           candidate: candidate.id,
           position: candidate.position,
@@ -296,17 +343,20 @@ export const useBookingStore = create<BookingStore>()(
 
       processExpiredWaitlistNotifications: () => {
         const now = dayjs();
-        const { waitlist, notifyNextWaitlist } = get();
+        const { waitlist } = get();
         let changed = false;
+        const expiredItems: Array<{ studioId: string; date: string; startTime: string; endTime: string }> = [];
 
         const updated = waitlist.map((w) => {
           if (w.status === 'notified' && w.expiresAt && now.isAfter(dayjs(w.expiresAt))) {
             changed = true;
             console.log('[BookingStore] 候补补位确认超时，顺延下一位', w.id);
-            setTimeout(
-              () => notifyNextWaitlist(w.studioId, w.date, w.startTime, w.endTime),
-              0
-            );
+            expiredItems.push({
+              studioId: w.studioId,
+              date: w.date,
+              startTime: w.startTime,
+              endTime: w.endTime
+            });
             return { ...w, status: 'expired' as WaitlistStatus, position: 0 };
           }
           return w;
@@ -315,6 +365,9 @@ export const useBookingStore = create<BookingStore>()(
         if (changed) {
           set({ waitlist: updated });
           get().recalcWaitlistPositions();
+          expiredItems.forEach((item) => {
+            get().notifyNextWaitlist(item.studioId, item.date, item.startTime, item.endTime);
+          });
         }
         return changed;
       }

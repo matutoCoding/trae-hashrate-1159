@@ -1,14 +1,34 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, Button } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import classnames from 'classnames';
 import { useRateStore } from '@/store/rateStore';
+import { RateType } from '@/types';
 import styles from './index.module.scss';
 
 const RateInfoPage: React.FC = () => {
   const rates = useRateStore((s) => s.rates);
   const weekdayRates = rates.filter((r) => r.weekdays.includes(1));
   const weekendRates = rates.filter((r) => r.weekdays.includes(6));
+
+  const priceRanges = useMemo(() => {
+    const getRange = (type: RateType) => {
+      const typeRates = rates.filter((r) => r.type === type);
+      if (typeRates.length === 0) return { min: 0, max: 0 };
+      const prices = typeRates.map((r) => r.pricePerHour);
+      return { min: Math.min(...prices), max: Math.max(...prices) };
+    };
+    return {
+      peak: getRange('peak'),
+      normal: getRange('normal'),
+      offpeak: getRange('offpeak')
+    };
+  }, [rates]);
+
+  const formatRange = (range: { min: number; max: number }) => {
+    if (range.min === range.max) return String(range.min);
+    return `${range.min}-${range.max}`;
+  };
 
   const handleGotoManage = () => {
     Taro.navigateTo({ url: '/pages/rate-manage/index' });
@@ -37,7 +57,7 @@ const RateInfoPage: React.FC = () => {
             <Text className={styles.rateTime}>需求旺盛时段，价格较高</Text>
           </View>
           <View className={styles.ratePrice}>
-            <Text className={styles.ratePriceValue}>180-220</Text>
+            <Text className={styles.ratePriceValue}>{formatRange(priceRanges.peak)}</Text>
             <Text className={styles.ratePriceUnit}>元/时</Text>
           </View>
         </View>
@@ -48,7 +68,7 @@ const RateInfoPage: React.FC = () => {
             <Text className={styles.rateTime}>正常营业时段，标准价格</Text>
           </View>
           <View className={styles.ratePrice}>
-            <Text className={styles.ratePriceValue}>120</Text>
+            <Text className={styles.ratePriceValue}>{formatRange(priceRanges.normal)}</Text>
             <Text className={styles.ratePriceUnit}>元/时</Text>
           </View>
         </View>
@@ -59,7 +79,7 @@ const RateInfoPage: React.FC = () => {
             <Text className={styles.rateTime}>早班特惠时段，超值优惠</Text>
           </View>
           <View className={styles.ratePrice}>
-            <Text className={styles.ratePriceValue}>80-120</Text>
+            <Text className={styles.ratePriceValue}>{formatRange(priceRanges.offpeak)}</Text>
             <Text className={styles.ratePriceUnit}>元/时</Text>
           </View>
         </View>

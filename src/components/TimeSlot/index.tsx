@@ -15,23 +15,29 @@ const statusMap = {
   booked: '已预约',
   waitlist: '候补排队',
   maintenance: '维护中',
-  expired: '已过期'
+  expired: '已过期',
+  notified: '待补位'
 };
 
 const TimeSlot: React.FC<TimeSlotProps> = ({ slot, selected = false, onClick }) => {
   const isAvailable = slot.status === 'available';
+  const isBooked = slot.status === 'booked';
+  const isNotified = slot.status === 'notified';
+  const isWaitlist = slot.status === 'waitlist';
   const isPeak = slot.rateType === 'peak';
 
   const handleClick = () => {
-    if (isAvailable && onClick) {
-      console.log('[TimeSlot] 选择时段', slot);
+    if (onClick) {
+      console.log('[TimeSlot] 点击时段', slot);
       onClick(slot);
     }
   };
 
   const containerClass = classnames(
     styles.slot,
-    !isAvailable && styles.booked,
+    isBooked && styles.booked,
+    isNotified && styles.notified,
+    isWaitlist && styles.waitlist,
     isAvailable && !isPeak && !selected && styles.available,
     isAvailable && isPeak && !selected && styles.peak,
     selected && isPeak && styles.peakSelected,
@@ -50,7 +56,7 @@ const TimeSlot: React.FC<TimeSlotProps> = ({ slot, selected = false, onClick }) 
         <Text className={styles.rateLabel}>
           {slot.rateType === 'peak' ? '高峰' : slot.rateType === 'offpeak' ? '特惠' : '平峰'}
         </Text>
-        <Text className={styles.statusText}>{!isAvailable ? statusMap[slot.status] : '可预约'}</Text>
+        <Text className={styles.statusText}>{isAvailable ? '可预约' : statusMap[slot.status]}</Text>
       </View>
     </View>
   );

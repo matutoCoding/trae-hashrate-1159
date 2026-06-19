@@ -31,7 +31,7 @@ export interface TimeRate {
   weekdays: number[];
 }
 
-export type SlotStatus = 'available' | 'booked' | 'waitlist' | 'maintenance' | 'expired';
+export type SlotStatus = 'available' | 'booked' | 'waitlist' | 'maintenance' | 'expired' | 'notified';
 
 export interface TimeSlot {
   id: string;
