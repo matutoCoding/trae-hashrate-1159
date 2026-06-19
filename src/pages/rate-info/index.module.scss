@@ -1,0 +1,236 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: 80rpx;
+}
+
+.header {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  padding: $spacing-xl $page-padding;
+  border-radius: 0 0 $radius-xl $radius-xl;
+  margin-bottom: $spacing-md;
+}
+
+.title {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.desc {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: $line-height-normal;
+}
+
+.section {
+  background-color: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.rateCard {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  margin-bottom: $spacing-sm;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.peak {
+  background-color: $color-peak-bg;
+}
+
+.normal {
+  background-color: $color-offpeak-bg;
+}
+
+.offpeak {
+  background-color: rgba(0, 180, 42, 0.08);
+}
+
+.rateIcon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  margin-right: $spacing-md;
+  flex-shrink: 0;
+}
+
+.peakIcon {
+  background-color: #FF7D00;
+}
+
+.normalIcon {
+  background-color: #2D5BFF;
+}
+
+.offpeakIcon {
+  background-color: #00B42A;
+}
+
+.rateInfo {
+  flex: 1;
+}
+
+.rateLabel {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: 4rpx;
+}
+
+.rateTime {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}
+
+.ratePrice {
+  display: flex;
+  align-items: baseline;
+}
+
+.ratePriceValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-price;
+}
+
+.ratePriceUnit {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-left: 4rpx;
+}
+
+.table {
+  width: 100%;
+  border-radius: $radius-md;
+  overflow: hidden;
+}
+
+.tableRow {
+  display: flex;
+  border-bottom: 1rpx solid $color-divider;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.tableHeader {
+  background-color: $color-bg-hover;
+}
+
+.tableCell {
+  flex: 1;
+  padding: $spacing-md $spacing-sm;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  text-align: center;
+}
+
+.tableHeaderCell {
+  font-weight: $font-weight-semibold;
+  color: $color-text-secondary;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2rpx 12rpx;
+  border-radius: $radius-xs;
+  font-size: 20rpx;
+  font-weight: $font-weight-medium;
+}
+
+.peakTag {
+  background-color: $color-peak-bg;
+  color: $color-peak-text;
+}
+
+.normalTag {
+  background-color: $color-offpeak-bg;
+  color: $color-offpeak-text;
+}
+
+.offpeakTag {
+  background-color: rgba(0, 180, 42, 0.1);
+  color: $color-success;
+}
+
+.ruleList {
+  padding: 0;
+  margin: 0;
+}
+
+.ruleItem {
+  display: flex;
+  align-items: flex-start;
+  padding: $spacing-sm 0;
+}
+
+.ruleNum {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: $radius-round;
+  background-color: $color-primary;
+  color: $color-text-white;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-sm;
+  flex-shrink: 0;
+  margin-top: 4rpx;
+}
+
+.ruleText {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+  flex: 1;
+}
+
+.example {
+  background-color: rgba(45, 91, 255, 0.04);
+  border-radius: $radius-md;
+  padding: $spacing-md;
+}
+
+.exampleTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $color-primary;
+  margin-bottom: $spacing-sm;
+}
+
+.exampleText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.exampleHighlight {
+  color: $color-price;
+  font-weight: $font-weight-semibold;
+}

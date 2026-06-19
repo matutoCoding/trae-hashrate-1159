@@ -1,0 +1,165 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.header {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  padding: $spacing-xl $page-padding $spacing-lg;
+  border-radius: 0 0 $radius-xl $radius-xl;
+}
+
+.title {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: $spacing-lg;
+}
+
+.searchBar {
+  display: flex;
+  align-items: center;
+  height: 72rpx;
+  background-color: $color-bg-card;
+  border-radius: $radius-button;
+  padding: 0 $spacing-lg;
+  box-shadow: $shadow-card;
+}
+
+.searchIcon {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: $spacing-sm;
+  opacity: 0.5;
+}
+
+.searchInput {
+  flex: 1;
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  height: 72rpx;
+}
+
+.filterBar {
+  padding: $spacing-md $page-padding;
+}
+
+.filterScroll {
+  width: 100%;
+  @include scroll-x-container;
+}
+
+.filterList {
+  display: inline-flex;
+  gap: $spacing-sm;
+  padding-bottom: $spacing-xs;
+}
+
+.filterItem {
+  @include scroll-x-item(auto);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 $spacing-lg;
+  height: 56rpx;
+  border-radius: $radius-button;
+  background-color: $color-bg-card;
+  color: $color-text-secondary;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+  border: 1rpx solid $color-border;
+  white-space: nowrap;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.filterActive {
+  background-color: $color-primary;
+  color: $color-text-white;
+  border-color: $color-primary;
+}
+
+.list {
+  padding: 0 $page-padding;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.countBadge {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  background-color: rgba(45, 91, 255, 0.08);
+  padding: 4rpx 16rpx;
+  border-radius: $radius-sm;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.emptyIcon {
+  width: 120rpx;
+  height: 120rpx;
+  opacity: 0.3;
+  margin-bottom: $spacing-md;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.rateLegend {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: $color-bg-card;
+  margin: 0 $page-padding $spacing-md;
+  padding: $spacing-md;
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+}
+
+.legendDot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: $radius-round;
+  margin-right: $spacing-xs;
+}
+
+.legendText {
+  font-size: $font-size-xs;
+  color: $color-text-secondary;
+}

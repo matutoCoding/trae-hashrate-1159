@@ -1,0 +1,154 @@
+@use '@/styles/variables.scss' as *;
+
+.card {
+  background-color: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.studioName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  @include text-ellipsis;
+  flex: 1;
+  margin-right: $spacing-md;
+}
+
+.status {
+  padding: 6rpx 20rpx;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+}
+
+.pending {
+  background-color: rgba(45, 91, 255, 0.1);
+  color: $color-primary;
+}
+
+.confirmed {
+  background-color: $color-available-bg;
+  color: $color-available-text;
+}
+
+.completed {
+  background-color: rgba(0, 180, 42, 0.1);
+  color: $color-success;
+}
+
+.cancelled {
+  background-color: rgba(134, 144, 156, 0.15);
+  color: $color-text-tertiary;
+}
+
+.no_show {
+  background-color: $color-busy-bg;
+  color: $color-busy-text;
+}
+
+.released {
+  background-color: rgba(255, 125, 0, 0.1);
+  color: $color-warning;
+}
+
+.content {
+  padding-bottom: $spacing-md;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.infoLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  width: 100rpx;
+  flex-shrink: 0;
+}
+
+.infoValue {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: $spacing-md;
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+}
+
+.totalLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-right: $spacing-xs;
+}
+
+.totalAmount {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $color-price;
+}
+
+.hours {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-left: $spacing-sm;
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.btn {
+  @include button-reset;
+  height: $button-height-sm;
+  padding: 0 $spacing-lg;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+  white-space: nowrap;
+
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+.btnPrimary {
+  background-color: $color-primary;
+  color: $color-text-white;
+  border: none;
+}
+
+.btnOutline {
+  background-color: transparent;
+  color: $color-primary;
+  border: 1rpx solid $color-primary;
+}

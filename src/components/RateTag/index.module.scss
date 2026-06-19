@@ -1,0 +1,26 @@
+@use '@/styles/variables.scss' as *;
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 16rpx;
+  border-radius: $radius-xs;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+}
+
+.peak {
+  background-color: $color-peak-bg;
+  color: $color-peak-text;
+}
+
+.normal {
+  background-color: $color-offpeak-bg;
+  color: $color-offpeak-text;
+}
+
+.offpeak {
+  background-color: rgba(0, 180, 42, 0.1);
+  color: $color-success;
+}

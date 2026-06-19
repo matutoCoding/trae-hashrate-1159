@@ -1,0 +1,133 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: 120rpx;
+}
+
+.summary {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  margin: 0 $page-padding $spacing-md;
+  padding: $spacing-lg;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+}
+
+.summaryTitle {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: $spacing-xs;
+}
+
+.summaryAmount {
+  font-size: 48rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.summaryDesc {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.tabs {
+  padding: 0 $page-padding $spacing-md;
+}
+
+.tabScroll {
+  width: 100%;
+  @include scroll-x-container;
+}
+
+.tabList {
+  display: inline-flex;
+  gap: $spacing-sm;
+  background-color: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-xs;
+  box-shadow: $shadow-card;
+}
+
+.tabItem {
+  @include scroll-x-item(auto);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 $spacing-lg;
+  height: 64rpx;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-secondary;
+  white-space: nowrap;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+.tabActive {
+  background-color: $color-primary;
+  color: $color-text-white;
+}
+
+.listSection {
+  padding: 0 $page-padding;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionCount {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 160rpx 0;
+}
+
+.emptyIcon {
+  font-size: 100rpx;
+  opacity: 0.4;
+  margin-bottom: $spacing-md;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-lg;
+}
+
+.emptyBtn {
+  @include button-reset;
+  height: $button-height-md;
+  padding: 0 $spacing-xl;
+  border-radius: $radius-button;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-medium;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}

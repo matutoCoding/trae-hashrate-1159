@@ -1,0 +1,126 @@
+@use '@/styles/variables.scss' as *;
+
+.card {
+  background-color: $color-bg-card;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: $shadow-card-hover;
+  }
+}
+
+.cover {
+  width: 100%;
+  height: 320rpx;
+  position: relative;
+}
+
+.coverImage {
+  width: 100%;
+  height: 100%;
+}
+
+.statusTag {
+  position: absolute;
+  top: $spacing-md;
+  right: $spacing-md;
+  padding: 8rpx 20rpx;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+}
+
+.available {
+  background-color: $color-available-bg;
+  color: $color-available-text;
+}
+
+.busy {
+  background-color: $color-busy-bg;
+  color: $color-busy-text;
+}
+
+.maintenance {
+  background-color: rgba(134, 144, 156, 0.15);
+  color: $color-text-tertiary;
+}
+
+.content {
+  padding: $spacing-lg;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-sm;
+}
+
+.name {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  @include text-ellipsis;
+  flex: 1;
+  margin-right: $spacing-sm;
+}
+
+.price {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-price;
+}
+
+.priceUnit {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-normal;
+  color: $color-text-tertiary;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-md;
+}
+
+.tag {
+  padding: 4rpx 16rpx;
+  background-color: rgba(45, 91, 255, 0.08);
+  color: $color-primary;
+  font-size: $font-size-xs;
+  border-radius: $radius-xs;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+.infoLabel {
+  color: $color-text-tertiary;
+  margin-right: $spacing-xs;
+}
+
+.desc {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: $line-height-normal;
+  margin-bottom: $spacing-md;
+  @include text-ellipsis-multi(2);
+}

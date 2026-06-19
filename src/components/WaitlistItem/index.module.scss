@@ -1,0 +1,154 @@
+@use '@/styles/variables.scss' as *;
+
+.item {
+  background-color: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  position: relative;
+}
+
+.positionBadge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 64rpx;
+  height: 64rpx;
+  background: linear-gradient(135deg, $color-secondary 0%, $color-secondary-light 100%);
+  border-top-right-radius: $radius-lg;
+  border-bottom-left-radius: $radius-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.positionNum {
+  font-size: $font-size-md;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+  padding-right: $spacing-xl;
+}
+
+.studioName {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  @include text-ellipsis;
+  flex: 1;
+}
+
+.status {
+  padding: 6rpx 16rpx;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  margin-left: $spacing-sm;
+}
+
+.waiting {
+  background-color: rgba(45, 91, 255, 0.1);
+  color: $color-primary;
+}
+
+.notified {
+  background-color: $color-peak-bg;
+  color: $color-peak-text;
+}
+
+.confirmed {
+  background-color: $color-available-bg;
+  color: $color-available-text;
+}
+
+.expired {
+  background-color: rgba(134, 144, 156, 0.15);
+  color: $color-text-tertiary;
+}
+
+.cancelled {
+  background-color: rgba(134, 144, 156, 0.15);
+  color: $color-text-tertiary;
+}
+
+.info {
+  padding-bottom: $spacing-md;
+  border-bottom: 1rpx solid $color-divider;
+}
+
+.infoRow {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-sm;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.infoLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  width: 80rpx;
+  flex-shrink: 0;
+}
+
+.infoValue {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  flex: 1;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: $spacing-md;
+}
+
+.notice {
+  font-size: $font-size-xs;
+  color: $color-warning;
+  flex: 1;
+  @include text-ellipsis;
+}
+
+.actions {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.btn {
+  @include button-reset;
+  height: $button-height-sm;
+  padding: 0 $spacing-lg;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+.btnPrimary {
+  background-color: $color-secondary;
+  color: $color-text-white;
+  border: none;
+}
+
+.btnOutline {
+  background-color: transparent;
+  color: $color-text-tertiary;
+  border: 1rpx solid $color-border;
+}

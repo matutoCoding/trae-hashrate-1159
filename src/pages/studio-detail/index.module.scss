@@ -1,0 +1,264 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background-color: $color-bg-page;
+  padding-bottom: 160rpx;
+}
+
+.swiper {
+  width: 100%;
+  height: 480rpx;
+}
+
+.swiperImage {
+  width: 100%;
+  height: 100%;
+}
+
+.swiperDots {
+  position: absolute;
+  bottom: $spacing-md;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: $spacing-xs;
+}
+
+.swiperDot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: $radius-round;
+  background-color: rgba(255, 255, 255, 0.5);
+  transition: all $transition-base;
+}
+
+.swiperDotActive {
+  width: 32rpx;
+  background-color: $color-text-white;
+  border-radius: $radius-round;
+}
+
+.content {
+  padding: $spacing-lg $page-padding;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: $spacing-md;
+}
+
+.nameRow {
+  flex: 1;
+  margin-right: $spacing-md;
+}
+
+.name {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-xs;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.tag {
+  padding: 4rpx 16rpx;
+  background-color: rgba(45, 91, 255, 0.08);
+  color: $color-primary;
+  font-size: $font-size-xs;
+  border-radius: $radius-xs;
+}
+
+.status {
+  padding: 8rpx 20rpx;
+  border-radius: $radius-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+}
+
+.available {
+  background-color: $color-available-bg;
+  color: $color-available-text;
+}
+
+.busy {
+  background-color: $color-busy-bg;
+  color: $color-busy-text;
+}
+
+.maintenance {
+  background-color: rgba(134, 144, 156, 0.15);
+  color: $color-text-tertiary;
+}
+
+.section {
+  background-color: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+}
+
+.desc {
+  font-size: $font-size-md;
+  color: $color-text-secondary;
+  line-height: $line-height-loose;
+}
+
+.infoGrid {
+  display: flex;
+}
+
+.infoItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.infoValue {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-primary;
+}
+
+.infoLabel {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-top: 4rpx;
+}
+
+.infoDivider {
+  width: 1rpx;
+  background-color: $color-divider;
+}
+
+.equipList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.equipItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-md;
+  background-color: $color-bg-hover;
+  border-radius: $radius-md;
+  width: calc(50% - 8rpx);
+  box-sizing: border-box;
+}
+
+.equipIcon {
+  font-size: 32rpx;
+  margin-right: $spacing-sm;
+}
+
+.equipInfo {
+  flex: 1;
+}
+
+.equipName {
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  font-weight: $font-weight-medium;
+}
+
+.equipQty {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-top: 2rpx;
+}
+
+.address {
+  display: flex;
+  align-items: center;
+}
+
+.addressIcon {
+  font-size: 32rpx;
+  margin-right: $spacing-sm;
+}
+
+.addressText {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  flex: 1;
+}
+
+.bottomBar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $color-bg-card;
+  padding: $spacing-md $page-padding;
+  padding-bottom: calc(#{$spacing-md} + env(safe-area-inset-bottom));
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+}
+
+.priceInfo {
+  display: flex;
+  align-items: baseline;
+}
+
+.priceLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-right: $spacing-xs;
+}
+
+.priceValue {
+  font-size: $font-size-xxl;
+  font-weight: $font-weight-bold;
+  color: $color-price;
+}
+
+.priceUnit {
+  font-size: $font-size-xs;
+  color: $color-text-tertiary;
+  margin-left: 4rpx;
+}
+
+.bookBtn {
+  @include button-reset;
+  height: $button-height-lg;
+  padding: 0 64rpx;
+  border-radius: $radius-button;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  transition: all $transition-base;
+
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.bookBtnDisabled {
+  background-color: $color-text-disabled;
+  background: none;
+  background-color: $color-text-disabled;
+}
